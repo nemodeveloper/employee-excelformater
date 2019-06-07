@@ -65,7 +65,7 @@ public class EmployeePassFormatter
 
     private String buildFileName()
     {
-       return Main.getBasePath() + String.format("EmployeePass-%s.xls", existSheet.getRow(2).getCell(0).getStringCellValue());
+       return Main.getBasePath() + "access_zone_formatted.xls";
     }
 
     private Workbook buildWorkbook()
