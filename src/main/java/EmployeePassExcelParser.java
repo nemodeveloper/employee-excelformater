@@ -1,11 +1,9 @@
-import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -42,11 +40,13 @@ public class EmployeePassExcelParser
     {
         try
         {
-            InputStream in = new FileInputStream(new File(fileName));
-            return new HSSFWorkbook(in).getSheetAt(0);
+            Workbook workbook = WorkbookFactory.create(new File(fileName));
+            Sheet sheet = workbook.getSheetAt(0);
+            workbook.close();
 
+            return sheet;
         }
-        catch (IOException e)
+        catch (Exception e)
         {
             throw new RuntimeException(e);
         }
