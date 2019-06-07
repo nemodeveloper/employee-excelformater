@@ -1,6 +1,6 @@
 import java.util.Calendar;
 
-public class Entity
+public class EmployeePass
 {
     public enum Direction
     {
@@ -22,5 +22,7 @@ public class Entity
     public String fio;
     public Calendar date;
     public Direction direction;
+    public String inObject;
+    public String outObject;
     public String workType;
 }
