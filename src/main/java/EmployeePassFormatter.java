@@ -1,8 +1,6 @@
+import org.apache.poi.hssf.usermodel.HSSFCellStyle;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileOutputStream;
 import java.text.SimpleDateFormat;
@@ -72,31 +70,43 @@ public class EmployeePassFormatter
     {
         Workbook book = new HSSFWorkbook();
         Sheet sheet = book.createSheet("Worksheet");
-        sheet.createRow(0).createCell(0).setCellValue(existSheet.getRow(0).getCell(0).getStringCellValue());
-        sheet.createRow(1).createCell(0).setCellValue(existSheet.getRow(1).getCell(0).getStringCellValue());
-        sheet.createRow(2).createCell(0).setCellValue(existSheet.getRow(2).getCell(0).getStringCellValue());
 
-        Row headerRow = sheet.createRow(3);
+        CellStyle dataCellStyle = book.createCellStyle();
+        fillDataCellStyle(dataCellStyle);
+
+        sheet.createRow(0).createCell(0).setCellValue(existSheet.getRow(0).getCell(0).getStringCellValue());
+        sheet.getRow(0).getCell(0).setCellStyle(dataCellStyle);
+        sheet.createRow(1).createCell(0).setCellValue(existSheet.getRow(1).getCell(0).getStringCellValue());
+        sheet.getRow(1).getCell(0).setCellStyle(dataCellStyle);
+        sheet.createRow(2).createCell(0).setCellValue(existSheet.getRow(2).getCell(0).getStringCellValue());
+        sheet.getRow(2).getCell(0).setCellStyle(dataCellStyle);
+
+        Row headerRow = sheet.createRow(4);
         Row existHeaderRow = existSheet.getRow(3);
 
         headerRow.createCell(0).setCellValue(existHeaderRow.getCell(0).getStringCellValue());
-        fillCellStyle(headerRow.getCell(0).getCellStyle(), existHeaderRow.getCell(0).getCellStyle());
+        headerRow.getCell(0).setCellStyle(dataCellStyle);
+        fillHeaderCellStyle(headerRow.getCell(0).getCellStyle(), existHeaderRow.getCell(0).getCellStyle());
         sheet.setColumnWidth(0, existSheet.getColumnWidth(0));
 
         headerRow.createCell(1).setCellValue(existHeaderRow.getCell(1).getStringCellValue());
-        fillCellStyle(headerRow.getCell(1).getCellStyle(), existHeaderRow.getCell(1).getCellStyle());
+        headerRow.getCell(1).setCellStyle(dataCellStyle);
+        fillHeaderCellStyle(headerRow.getCell(1).getCellStyle(), existHeaderRow.getCell(1).getCellStyle());
         sheet.setColumnWidth(1, existSheet.getColumnWidth(1));
 
         headerRow.createCell(2).setCellValue(existHeaderRow.getCell(3).getStringCellValue());
-        fillCellStyle(headerRow.getCell(2).getCellStyle(), existHeaderRow.getCell(3).getCellStyle());
+        headerRow.getCell(2).setCellStyle(dataCellStyle);
+        fillHeaderCellStyle(headerRow.getCell(2).getCellStyle(), existHeaderRow.getCell(3).getCellStyle());
         sheet.setColumnWidth(2, existSheet.getColumnWidth(3));
 
         headerRow.createCell(3).setCellValue(existHeaderRow.getCell(2).getStringCellValue());
-        fillCellStyle(headerRow.getCell(3).getCellStyle(), existHeaderRow.getCell(2).getCellStyle());
+        headerRow.getCell(3).setCellStyle(dataCellStyle);
+        fillHeaderCellStyle(headerRow.getCell(3).getCellStyle(), existHeaderRow.getCell(2).getCellStyle());
         sheet.setColumnWidth(3, existSheet.getColumnWidth(2));
 
         headerRow.createCell(4).setCellValue(existHeaderRow.getCell(6).getStringCellValue());
-        fillCellStyle(headerRow.getCell(4).getCellStyle(), existHeaderRow.getCell(6).getCellStyle());
+        headerRow.getCell(4).setCellStyle(dataCellStyle);
+        fillHeaderCellStyle(headerRow.getCell(4).getCellStyle(), existHeaderRow.getCell(6).getCellStyle());
         sheet.setColumnWidth(4, existSheet.getColumnWidth(6));
 
         int index = 5;
@@ -111,9 +121,13 @@ public class EmployeePassFormatter
                 row.createCell(3).setCellValue(employeePass.outObject);
                 row.createCell(4).setCellValue(employeePass.workType);
 
+                for (int i = 0; i < 5; ++i)
+                {
+                    row.getCell(i).setCellStyle(dataCellStyle);
+                }
+
                 ++index;
             }
-            ++index;
         }
 
         return book;
@@ -125,9 +139,22 @@ public class EmployeePassFormatter
         workbook.close();
     }
 
-    private void fillCellStyle(CellStyle newCellStyle, CellStyle existCellStyle)
+    private void fillHeaderCellStyle(CellStyle newCellStyle, CellStyle existCellStyle)
     {
 
+    }
+
+    private void fillDataCellStyle(CellStyle cellStyle)
+    {
+        cellStyle.setBorderBottom(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderTop(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderRight(HSSFCellStyle.BORDER_THIN);
+        cellStyle.setBorderLeft(HSSFCellStyle.BORDER_THIN);
+
+        cellStyle.setBottomBorderColor(IndexedColors.BLACK.getIndex());
+        cellStyle.setTopBorderColor(IndexedColors.BLACK.getIndex());
+        cellStyle.setLeftBorderColor(IndexedColors.BLACK.getIndex());
+        cellStyle.setRightBorderColor(IndexedColors.BLACK.getIndex());
     }
 
 }
