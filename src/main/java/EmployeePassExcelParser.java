@@ -4,6 +4,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 import org.apache.poi.ss.usermodel.WorkbookFactory;
 
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -20,7 +21,7 @@ public class EmployeePassExcelParser
     {
         this.fileName = fileName;
         this.dateParser = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
-        this.sheet = getSheet(fileName);
+        this.sheet = getSheet();
     }
 
     public List<EmployeePass> parse()
@@ -43,7 +44,7 @@ public class EmployeePassExcelParser
         return fileName;
     }
 
-    private Sheet getSheet(String fileName)
+    private Sheet getSheet()
     {
         try
         {
@@ -52,6 +53,11 @@ public class EmployeePassExcelParser
             workbook.close();
 
             return sheet;
+        }
+        catch (FileNotFoundException e)
+        {
+            System.out.println(String.format("Не удалось открыть файл %s !", fileName));
+            throw new RuntimeException(e);
         }
         catch (Exception e)
         {

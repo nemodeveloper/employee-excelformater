@@ -67,9 +67,9 @@ public class EmployeePassFormatter
 
     private String buildFileName()
     {
-        String[] dateToken =  existSheet.getRow(2).getCell(0).getStringCellValue().split(" ");
         try
         {
+            String[] dateToken =  existSheet.getRow(2).getCell(0).getStringCellValue().split(" ");
             return Main.getBasePath() + String.format("Отчет за %s.xls",
                     fileDateFormat.format(fileDateParser.parse(dateToken[0]).getTime()));
         }
