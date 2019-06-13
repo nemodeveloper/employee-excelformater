@@ -2,13 +2,16 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.*;
 
 import java.io.FileOutputStream;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
 public class EmployeePassFormatter
 {
-    private final SimpleDateFormat dateFormat;
+    private final SimpleDateFormat passDateFormat;
+    private final SimpleDateFormat fileDateFormat;
+    private final SimpleDateFormat fileDateParser;
     private final Sheet existSheet;
     private final List<EmployeePass> employeePassList;
 
@@ -16,7 +19,9 @@ public class EmployeePassFormatter
 
     public EmployeePassFormatter(EmployeePassExcelParser employeePassExcelParser)
     {
-        this.dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        this.passDateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+        this.fileDateFormat = new SimpleDateFormat("dd MMMM yyyy", Locale.forLanguageTag("ru"));
+        this.fileDateParser = new SimpleDateFormat("dd.MM.yyyy");
         this.existSheet = employeePassExcelParser.getParsedSheet();
         this.employeePassList = employeePassExcelParser.parse();
     }
@@ -62,7 +67,16 @@ public class EmployeePassFormatter
 
     private String buildFileName()
     {
-       return Main.getBasePath() + "access_zone_formatted.xls";
+        String[] dateToken =  existSheet.getRow(2).getCell(0).getStringCellValue().split(" ");
+        try
+        {
+            return Main.getBasePath() + String.format("Отчет за %s.xls",
+                    fileDateFormat.format(fileDateParser.parse(dateToken[0]).getTime()));
+        }
+        catch (ParseException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     private Workbook buildWorkbook()
@@ -115,7 +129,7 @@ public class EmployeePassFormatter
             {
                 Row row = sheet.createRow(index);
                 row.createCell(0).setCellValue(employeePass.fio);
-                row.createCell(1).setCellValue(dateFormat.format(employeePass.date.getTime()));
+                row.createCell(1).setCellValue(passDateFormat.format(employeePass.date.getTime()));
                 row.createCell(2).setCellValue(employeePass.inObject);
                 row.createCell(3).setCellValue(employeePass.outObject);
                 row.createCell(4).setCellValue(employeePass.workType);
@@ -136,6 +150,7 @@ public class EmployeePassFormatter
     {
         workbook.write(new FileOutputStream(fileName));
         workbook.close();
+        System.out.println(String.format("Данные отформатированы и записаны в файл %s!", fileName));
     }
 
     private void fillHeaderCellStyle(CellStyle newCellStyle, CellStyle existCellStyle)

@@ -4,17 +4,8 @@ public class Main
 {
     public static void main(String[] args)
     {
-        try
-        {
-            String fileName = "access_zone.xls";
-
-            new EmployeePassFormatter(new EmployeePassExcelParser(getBasePath() + fileName)).format();
-        }
-        catch (Exception e)
-        {
-            System.out.println("Произошла ошибка форматирования файла!");
-            e.printStackTrace();
-        }
+        String fileName = Main.getBasePath() + "access_zone.xls";
+        new EmployeePassProcessor(fileName).process();
     }
 
     public static String getBasePath()
@@ -28,6 +19,5 @@ public class Main
         {
             throw new RuntimeException(e);
         }
-
     }
 }

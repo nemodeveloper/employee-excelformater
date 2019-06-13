@@ -11,12 +11,14 @@ import java.util.List;
 
 public class EmployeePassExcelParser
 {
+    private final String fileName;
     private final SimpleDateFormat dateParser;
     private final Sheet sheet;
     private List<EmployeePass> employeePassList;
 
     public EmployeePassExcelParser(String fileName)
     {
+        this.fileName = fileName;
         this.dateParser = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
         this.sheet = getSheet(fileName);
     }
@@ -34,6 +36,11 @@ public class EmployeePassExcelParser
     public Sheet getParsedSheet()
     {
         return sheet;
+    }
+
+    public String getFileName()
+    {
+        return fileName;
     }
 
     private Sheet getSheet(String fileName)
