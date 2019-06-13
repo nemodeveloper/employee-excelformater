@@ -4,8 +4,7 @@ public class Main
 {
     public static void main(String[] args)
     {
-        String fileName = Main.getBasePath() + "access_zone.xls";
-        new EmployeePassProcessor(fileName).process();
+        new EmployeePassProcessor(args[0]).process();
     }
 
     public static String getBasePath()
